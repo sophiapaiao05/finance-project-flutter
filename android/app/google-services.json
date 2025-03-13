@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1014874760309",
+    "project_id": "sophiaappfinanceiro",
+    "storage_bucket": "sophiaappfinanceiro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1014874760309:android:4fad9b4b90ce5f8174c43c",
+        "android_client_info": {
+          "package_name": "com.example.finance_project_sophia_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFICqBd23lkSTKLCRRAHTxIKO08__jAJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1014874760309:android:d7a485d0fda27c5274c43c",
+        "android_client_info": {
+          "package_name": "com.example.sophia_projeto_financeiro_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFICqBd23lkSTKLCRRAHTxIKO08__jAJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
