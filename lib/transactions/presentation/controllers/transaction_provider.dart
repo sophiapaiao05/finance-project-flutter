@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'transaction_service.dart';
 
 class TransactionProvider with ChangeNotifier {

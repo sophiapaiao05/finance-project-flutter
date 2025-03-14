@@ -11,7 +11,7 @@ class Indicator extends StatelessWidget {
     required this.color,
     required this.text,
     this.size = 16,
-    this.textColor = const Color(0xff505050),
+    this.textColor = Colors.white,
   });
 
   @override
