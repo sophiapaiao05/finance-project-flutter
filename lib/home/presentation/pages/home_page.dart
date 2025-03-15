@@ -2,7 +2,9 @@ import 'package:finance_project_sophia_flutter/home/presentation/pages/chart/wid
 import 'package:finance_project_sophia_flutter/home/presentation/pages/finance_analysis/finance_analysis.dart';
 import 'package:finance_project_sophia_flutter/home/presentation/utils/dynamic_card.dart';
 import 'package:finance_project_sophia_flutter/home/presentation/utils/texts.dart';
+import 'package:finance_project_sophia_flutter/transactions/models/transaction_model.dart';
 import 'package:finance_project_sophia_flutter/transactions/presentation/controllers/transaction_provider.dart';
+import 'package:finance_project_sophia_flutter/transactions/presentation/pages/transactions_page.dart';
 import 'package:finance_project_sophia_flutter/utils/app_sizes.dart';
 import 'package:finance_project_sophia_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,8 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    Provider.of<TransactionProvider>(context, listen: false)
+        .fetchTransactions();
   }
 
   void _onItemTapped(int index) {
@@ -55,26 +59,13 @@ class HomePageState extends State<HomePage> {
         ),
       ),
       backgroundColor: FinanceProjectColors.background,
-      body: FutureBuilder<void>(
-        future: Provider.of<TransactionProvider>(context, listen: false)
-            .fetchTransactions(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: Consumer<TransactionProvider>(
+        builder: (context, transactionProvider, child) {
+          if (transactionProvider.transactions.isEmpty) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: Text('Erro ao carregar transações.'));
           } else {
-            return Consumer<TransactionProvider>(
-              builder: (context, transactionProvider, child) {
-                if (transactionProvider.transactions.isEmpty) {
-                  return const Center(
-                      child: Text('Nenhuma transação encontrada.'));
-                } else {
-                  return _buildPageContent(
-                      _selectedIndex, transactionProvider.transactions);
-                }
-              },
-            );
+            return _buildPageContent(
+                _selectedIndex, transactionProvider.transactions);
           }
         },
       ),
@@ -89,7 +80,7 @@ class HomePageState extends State<HomePage> {
             label: AppTexts.home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.monetization_on),
             label: AppTexts.transactions,
           ),
         ],
@@ -100,7 +91,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildPageContent(int index, List<Map<String, dynamic>> transactions) {
+  Widget _buildPageContent(int index, List<TransactionModel> transactions) {
     switch (index) {
       case 0:
         return SingleChildScrollView(
@@ -124,44 +115,9 @@ class HomePageState extends State<HomePage> {
       case 1:
         return const Center(child: Text('Página Inicial'));
       case 2:
-        return const Center(child: Text('Configurações'));
+        return TransactionsPage();
       default:
         return const Center(child: Text('Página Inicial'));
     }
-  }
-}
-
-class PieChartSample2 extends StatefulWidget {
-  final List<Map<String, dynamic>> transactions;
-
-  const PieChartSample2({super.key, required this.transactions});
-
-  @override
-  State<StatefulWidget> createState() => PieChart2State();
-}
-
-class PieChart2State extends State<PieChartSample2> {
-  int touchedIndex = -1;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: DynamicCard(
-            margin: EdgeInsets.only(
-              bottom: AppSizes.marginLarge,
-              top: AppSizes.marginLarge,
-              left: AppSizes.marginLarge,
-              right: AppSizes.marginLarge,
-            ),
-            child: TransactionsPieChart(
-              transactions: widget.transactions,
-            ),
-          ),
-        ),
-        FinancialAnalysisCard(transactions: widget.transactions)
-      ],
-    );
   }
 }

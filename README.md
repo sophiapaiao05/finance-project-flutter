@@ -1,19 +1,34 @@
-# finance_project_sophia_flutter
+# Projeto Financeiro - Flutter FIAP
 
-A new Flutter project.
+Este é um projeto Flutter para gerenciar transações financeiras, permitindo que os usuários filtrem transações por categoria e data, visualize gráficos e adicione transações.
 
-## Getting Started
+## Funcionalidades
 
-This project is a starting point for a Flutter application.
+- Exibir lista de transações;
+- Filtrar transações por categoria;
+- Filtrar transações por intervalo de datas;
+- Suporte a múltiplos métodos de pagamento;
+- Gráfico de gastos;
+- Análise Financeira.
 
-A few resources to get you started if this is your first Flutter project:
+## Instalação
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/sophiapaiao05/finance-project-flutter
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# finance-project-flutter
-# finance-project-flutter
-# finance-project-flutter
+2. Navegue até o diretório do projeto:
+ ``` cd finance-project-sophia-flutter
+
+## Estrutura
+
+- lib/: Contém o código fonte do aplicativo.
+- main.dart: Ponto de entrada do aplicativo.
+- home/: Contém a página inicial e seus componentes.
+- transactions/: Contém a lógica e a interface de usuário para gerenciar transações.
+- login/: Contém login do usuário.
+- utils/: Contém utilitários e constantes usadas no aplicativo.
+
+## Dependências
+- provider: Gerenciamento de estado.
+

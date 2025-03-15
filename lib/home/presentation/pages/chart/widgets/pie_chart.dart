@@ -1,9 +1,10 @@
 import 'package:finance_project_sophia_flutter/home/presentation/pages/chart/widgets/indicator.dart';
+import 'package:finance_project_sophia_flutter/transactions/models/transaction_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class TransactionsPieChart extends StatefulWidget {
-  final List<Map<String, dynamic>> transactions;
+  final List<TransactionModel> transactions;
 
   const TransactionsPieChart({super.key, required this.transactions});
 
@@ -52,8 +53,8 @@ class TransactionsPieChartState extends State<TransactionsPieChart> {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Indicator(
-                  color: getColor(transaction['description']),
-                  text: transaction['description'],
+                  color: getColor(transaction.description),
+                  text: transaction.description,
                 ),
               );
             }).toList(),
@@ -65,16 +66,16 @@ class TransactionsPieChartState extends State<TransactionsPieChart> {
 
   List<PieChartSectionData> showingSections() {
     final totalAmount = widget.transactions
-        .fold<double>(0.0, (sum, transaction) => sum + transaction['amount']);
+        .fold<double>(0.0, (sum, transaction) => sum + transaction.amount);
     return List.generate(widget.transactions.length, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 25.0 : 16.0;
       final radius = isTouched ? 60.0 : 50.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
       final transaction = widget.transactions[i];
-      final percentage = (transaction['amount'] / totalAmount) * 100;
+      final percentage = (transaction.amount / totalAmount) * 100;
       return PieChartSectionData(
-        color: getColor(transaction['description']),
+        color: getColor(transaction.description),
         value: percentage,
         title: '${percentage.toStringAsFixed(1)}%',
         radius: radius,
