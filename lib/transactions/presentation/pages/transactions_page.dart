@@ -4,6 +4,7 @@ import 'package:finance_project_sophia_flutter/transactions/presentation/utils/t
 import 'package:finance_project_sophia_flutter/utils/app_sizes.dart';
 import 'package:finance_project_sophia_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 const textStyleDefault = TextStyle(
@@ -82,11 +83,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
                 Expanded(
                   child: ListView.builder(
                     controller: _scrollController,
-                    itemCount: transactionsProvider.transactions.length + 1,
+                    itemCount: transactionsProvider.transactions.length,
                     itemBuilder: (context, index) {
-                      if (index == transactionsProvider.transactions.length) {
-                        return SizedBox.shrink();
-                      }
                       final transaction =
                           transactionsProvider.transactions[index];
                       return ListTile(
@@ -99,13 +97,13 @@ class _TransactionsPageState extends State<TransactionsPage> {
                           ),
                         ),
                         subtitle: Text(
-                          transaction.date.toIso8601String(),
+                          formatDateToBrazilian(transaction.date),
                           style: textStyleDefault.copyWith(
                             fontSize: AppSizes.fontSizeSmall,
                           ),
                         ),
                         trailing: Text(
-                          '\$${transaction.amount.toStringAsFixed(2)}',
+                          formatCurrencyToBRL(transaction.amount),
                           style: textStyleDefault.copyWith(
                             fontSize: AppSizes.fontSizeSmall,
                           ),
@@ -129,53 +127,54 @@ class _TransactionsPageState extends State<TransactionsPage> {
         return AlertDialog(
           backgroundColor: FinanceProjectColors.background,
           title: Text('Filtros'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Consumer<TransactionProvider>(
-                builder: (context, transactionsProvider, child) {
-                  return DropdownButton<String>(
-                    value: transactionsProvider.selectedCategory,
-                    items: ['All', 'Food', 'Transport', 'Shopping']
-                        .map((category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(category),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      transactionsProvider.setCategory(value!);
-                    },
-                  );
+          content: Consumer<TransactionProvider>(
+            builder: (context, transactionsProvider, child) {
+              return DropdownButton<String>(
+                value: transactionsProvider.selectedCategory,
+                items: [
+                  'All',
+                  'Salário',
+                  'Supermercado',
+                  'Aluguel',
+                  'Eletrônicos',
+                  'Freelance'
+                ]
+                    .map((category) => DropdownMenuItem(
+                          value: category,
+                          child: Text(category),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  transactionsProvider.setCategory(value!);
                 },
-              ),
-              TextButton(
-                onPressed: () async {
-                  DateTimeRange? picked = await showDateRangePicker(
-                    context: context,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2101),
-                  );
-                  if (picked != null) {
-                    final transactionsProvider =
-                        Provider.of<TransactionProvider>(context,
-                            listen: false);
-                    transactionsProvider.setDateRange(picked.start, picked.end);
-                  }
-                },
-                child: Text('Selecionar Data'),
-              ),
-            ],
+              );
+            },
           ),
           actions: [
             TextButton(
               onPressed: () {
+                final transactionsProvider =
+                    Provider.of<TransactionProvider>(context, listen: false);
+                transactionsProvider
+                    .fetchTransactions(); // Atualiza a lista de transações
                 Navigator.of(context).pop();
               },
-              child: Text('Fechar'),
+              child: Text('Filtrar'),
             ),
           ],
         );
       },
     );
   }
+}
+
+String formatDateToBrazilian(DateTime date) {
+  final DateFormat formatter = DateFormat('dd/MM/yyyy');
+  return formatter.format(date);
+}
+
+String formatCurrencyToBRL(double amount) {
+  final NumberFormat formatter =
+      NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
+  return formatter.format(amount);
 }

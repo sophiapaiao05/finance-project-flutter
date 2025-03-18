@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:finance_project_sophia_flutter/transactions/models/transaction_model.dart';
+import 'package:flutter/scheduler.dart';
 
 class TransactionProvider with ChangeNotifier {
   List<TransactionModel> _transactions = [];
@@ -12,17 +13,50 @@ class TransactionProvider with ChangeNotifier {
   String _selectedCategory = 'All';
   DateTime? _startDate;
   DateTime? _endDate;
+  bool _isLoading = false;
+  bool _hasMore = true;
 
-  List<TransactionModel> get transactions => _transactions;
+  List<TransactionModel> get transactions {
+    if (_selectedCategory == 'All') {
+      return _transactions;
+    } else {
+      return _transactions
+          .where((transaction) => transaction.category == _selectedCategory)
+          .toList();
+    }
+  }
+
   List<TransactionModel> get filteredTransactions => _filteredTransactions;
   String get selectedCategory => _selectedCategory;
   DateTime? get startDate => _startDate;
   DateTime? get endDate => _endDate;
   DateTimeRange? _selectedDateRange;
+  bool get isLoading => _isLoading;
+  bool get hasMore => _hasMore;
 
-  Future<void> fetchTransactions() async {
-    _transactions = await TransactionService().fetchTransactions();
+  Future<void> fetchTransactions({int limit = 10}) async {
+    if (_isLoading || !_hasMore) return;
+
+    _isLoading = true;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+
+    List<TransactionModel> newTransactions =
+        await TransactionService().fetchTransactions(limit: limit);
+
+    if (newTransactions.length < limit) {
+      _hasMore = false;
+    }
+
+    _transactions.addAll(newTransactions);
     _applyFilters();
+
+    _isLoading = false;
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 
   void _applyFilters() {

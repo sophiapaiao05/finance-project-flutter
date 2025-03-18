@@ -44,6 +44,13 @@ class LoginAuthProvider with ChangeNotifier {
     }
   }
 
+  Future<void> logout() async {
+    await _auth.signOut();
+    _userCredential = null;
+    _currentUser = null;
+    notifyListeners();
+  }
+
   void clearError() {
     _errorMessage = null;
     notifyListeners();

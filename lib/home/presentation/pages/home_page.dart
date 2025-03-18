@@ -3,6 +3,8 @@ import 'package:finance_project_sophia_flutter/home/presentation/pages/finance_a
 import 'package:finance_project_sophia_flutter/home/presentation/pages/initial_page/initial_page.dart';
 import 'package:finance_project_sophia_flutter/home/presentation/utils/dynamic_card.dart';
 import 'package:finance_project_sophia_flutter/home/presentation/utils/texts.dart';
+import 'package:finance_project_sophia_flutter/login/presentation/controllers/login_auth_provider.dart';
+import 'package:finance_project_sophia_flutter/login/presentation/pages/login_page.dart';
 import 'package:finance_project_sophia_flutter/transactions/models/transaction_model.dart';
 import 'package:finance_project_sophia_flutter/transactions/presentation/controllers/transaction_provider.dart';
 import 'package:finance_project_sophia_flutter/transactions/presentation/pages/transactions_page.dart';
@@ -62,7 +64,7 @@ class HomePageState extends State<HomePage> {
       backgroundColor: FinanceProjectColors.background,
       body: Consumer<TransactionProvider>(
         builder: (context, transactionProvider, child) {
-          if (transactionProvider.transactions.isEmpty) {
+          if (transactionProvider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           } else {
             return _buildPageContent(
@@ -98,6 +100,17 @@ class HomePageState extends State<HomePage> {
         return SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  await Provider.of<LoginAuthProvider>(context, listen: false)
+                      .logout();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+              ),
               DynamicCard(
                 margin: EdgeInsets.only(
                   bottom: MediaQuery.of(context).size.height * 0.1,

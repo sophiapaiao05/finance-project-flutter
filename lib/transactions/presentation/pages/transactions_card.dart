@@ -3,6 +3,7 @@ import 'package:finance_project_sophia_flutter/home/presentation/utils/texts.dar
 import 'package:finance_project_sophia_flutter/transactions/models/transaction_model.dart';
 import 'package:finance_project_sophia_flutter/transactions/presentation/controllers/transaction_provider.dart';
 import 'package:finance_project_sophia_flutter/utils/app_sizes.dart';
+import 'package:finance_project_sophia_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,42 +41,57 @@ class _TransactionCardState extends State<TransactionCard> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Título'),
-            controller: _titleController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Por favor, insira um título.';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Valor'),
-            controller: _amountController,
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Por favor, insira um valor.';
-              }
-              if (double.tryParse(value) == null) {
-                return 'Por favor, insira um número válido.';
-              }
-              if (double.parse(value) <= 0) {
-                return 'Por favor, insira um valor maior que zero.';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _submitData,
-            child: Text('Salvar Transação'),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: AppSizes.paddingMedium,
+          right: AppSizes.paddingMedium,
+          left: AppSizes.paddingMedium,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Título'),
+              controller: _titleController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, insira um título.';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Valor'),
+              controller: _amountController,
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, insira um valor.';
+                }
+                if (double.tryParse(value) == null) {
+                  return 'Por favor, insira um número válido.';
+                }
+                if (double.parse(value) <= 0) {
+                  return 'Por favor, insira um valor maior que zero.';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: _submitData,
+                child: Text(
+                  'Salvar Transação',
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: FinanceProjectColors.orange,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -102,13 +118,13 @@ class Transactions extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () => _startAddNewTransaction(context),
-            child: Text('Adicionar Transação'),
+            child: Text('Adicionar Transação',
+                style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: FinanceProjectColors.orange,
+            ),
           ),
           SizedBox(height: AppSizes.heightSmall),
-          FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () => _startAddNewTransaction(context),
-          ),
         ],
       ),
     );

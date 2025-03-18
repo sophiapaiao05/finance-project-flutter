@@ -1,5 +1,6 @@
 import 'package:finance_project_sophia_flutter/home/presentation/pages/home_page.dart';
 import 'package:finance_project_sophia_flutter/login/presentation/controllers/login_auth_provider.dart';
+import 'package:finance_project_sophia_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,21 +17,17 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _login(BuildContext context) async {
-    try {
-      await Provider.of<LoginAuthProvider>(context, listen: false).login(
-        _emailController.text,
-        _passwordController.text,
-      );
+    await Provider.of<LoginAuthProvider>(context, listen: false).login(
+      _emailController.text,
+      _passwordController.text,
+    );
 
-      if (context.mounted &&
-          Provider.of<LoginAuthProvider>(context, listen: false).successLogin) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-      }
-    } catch (e) {
-      // Erro já tratado no AuthProvider
+    if (context.mounted &&
+        Provider.of<LoginAuthProvider>(context, listen: false).successLogin) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
     }
   }
 
@@ -54,9 +51,6 @@ class LoginPageState extends State<LoginPage> {
     final authProvider = Provider.of<LoginAuthProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login/Registrar'),
-      ),
       body: PageView(
         controller: _pageController,
         children: [
@@ -83,11 +77,13 @@ class LoginPageState extends State<LoginPage> {
             controller: _passwordController,
             errorMessage: authProvider.errorMessage,
             hintText: 'Senha',
+            obscureText: true,
           ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () => _login(context),
-            child: const Text('Login'),
+            child: const Text('Login',
+                style: TextStyle(color: FinanceProjectColors.orange)),
           ),
           TextButton(
             onPressed: () => _pageController.animateToPage(
@@ -95,7 +91,10 @@ class LoginPageState extends State<LoginPage> {
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
             ),
-            child: const Text('Não tem uma conta? Registre-se'),
+            child: const Text(
+              'Não tem uma conta? Registre-se',
+              style: TextStyle(color: FinanceProjectColors.orange),
+            ),
           ),
         ],
       ),
@@ -119,11 +118,13 @@ class LoginPageState extends State<LoginPage> {
             controller: _passwordController,
             errorMessage: authProvider.errorMessage,
             hintText: 'Senha',
+            obscureText: true,
           ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () => _register(context),
-            child: const Text('Registrar'),
+            child: const Text('Registrar',
+                style: TextStyle(color: FinanceProjectColors.orange)),
           ),
           TextButton(
             onPressed: () => _pageController.animateToPage(
@@ -131,7 +132,8 @@ class LoginPageState extends State<LoginPage> {
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
             ),
-            child: const Text('Já tem uma conta? Faça login'),
+            child: const Text('Já tem uma conta? Faça login',
+                style: TextStyle(color: FinanceProjectColors.orange)),
           ),
         ],
       ),
@@ -143,18 +145,21 @@ class TextFieldLogin extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final String? errorMessage;
+  final bool obscureText;
 
   const TextFieldLogin({
     super.key,
     required this.controller,
     required this.hintText,
     this.errorMessage,
+    this.obscureText = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      obscureText: obscureText,
       decoration: InputDecoration(
         hintText: hintText,
         errorText: errorMessage,
