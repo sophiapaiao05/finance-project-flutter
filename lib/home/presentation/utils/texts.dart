@@ -15,4 +15,15 @@ class AppTexts {
   static String home = 'Home';
 
   static String transactions = 'Transações';
+
+  static String transactionByApp = 'Transações por Aplicativo';
+
+  static String balancePaymentMethod = 'Saldo';
+
+  static String uploadReceipt = 'Enviar Recibo';
+
+  static String uploadReceiptSubtitle =
+      'Envie uma foto do seu recibo para registrar uma transação';
+
+  static String noImageSelected = 'Nenhuma imagem selecionada.';
 }

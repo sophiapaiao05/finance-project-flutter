@@ -1,5 +1,6 @@
 import 'package:finance_project_sophia_flutter/home/presentation/pages/chart/widgets/pie_chart.dart';
 import 'package:finance_project_sophia_flutter/home/presentation/pages/finance_analysis/finance_analysis.dart';
+import 'package:finance_project_sophia_flutter/home/presentation/pages/initial_page/initial_page.dart';
 import 'package:finance_project_sophia_flutter/home/presentation/utils/dynamic_card.dart';
 import 'package:finance_project_sophia_flutter/home/presentation/utils/texts.dart';
 import 'package:finance_project_sophia_flutter/transactions/models/transaction_model.dart';
@@ -113,7 +114,7 @@ class HomePageState extends State<HomePage> {
           ),
         );
       case 1:
-        return const Center(child: Text('Página Inicial'));
+        return InitialPage();
       case 2:
         return TransactionsPage();
       default:

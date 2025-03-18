@@ -1,1 +1,54 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"sophiaappfinanceiro","appId":"1:1014874760309:android:4fad9b4b90ce5f8174c43c","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"sophiaappfinanceiro","appId":"1:1014874760309:ios:bc3d6b110a2bf39774c43c","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"sophiaappfinanceiro","appId":"1:1014874760309:ios:bc3d6b110a2bf39774c43c","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"sophiaappfinanceiro","configurations":{"android":"1:1014874760309:android:4fad9b4b90ce5f8174c43c","ios":"1:1014874760309:ios:bc3d6b110a2bf39774c43c","macos":"1:1014874760309:ios:bc3d6b110a2bf39774c43c","web":"1:1014874760309:web:bc8f0fbc749fbfd074c43c","windows":"1:1014874760309:web:f70b90712ca25aa874c43c"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "sophiaappfinanceiro",
+          "appId": "1:1014874760309:android:4fad9b4b90ce5f8174c43c",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "sophiaappfinanceiro",
+          "appId": "1:1014874760309:ios:bc3d6b110a2bf39774c43c",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "sophiaappfinanceiro",
+          "appId": "1:1014874760309:ios:bc3d6b110a2bf39774c43c",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "sophiaappfinanceiro",
+          "configurations": {
+            "android": "1:1014874760309:android:4fad9b4b90ce5f8174c43c",
+            "ios": "1:1014874760309:ios:bc3d6b110a2bf39774c43c",
+            "macos": "1:1014874760309:ios:bc3d6b110a2bf39774c43c",
+            "web": "1:1014874760309:web:bc8f0fbc749fbfd074c43c",
+            "windows": "1:1014874760309:web:f70b90712ca25aa874c43c"
+          }
+        }
+      }
+    }
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "host": "localhost",
+      "port": 8081
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    }
+  }
+}

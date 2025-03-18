@@ -28,4 +28,16 @@ class TransactionModel {
       paymentMethod: data['paymentMethod'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'userId': id,
+      'category': category,
+      'description': description,
+      'amount': amount,
+      'date': date.toIso8601String(),
+      'type': type,
+      'paymentMethod': paymentMethod,
+    };
+  }
 }
