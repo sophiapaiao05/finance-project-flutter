@@ -1,4 +1,5 @@
-import 'package:finance_project_sophia_flutter/home/presentation/pages/chart/widgets/indicator.dart';
+import 'package:finance_project_sophia_flutter/features/home/presentation/pages/chart/widgets/indicator.dart';
+import 'package:finance_project_sophia_flutter/features/home/presentation/utils/texts.dart';
 import 'package:finance_project_sophia_flutter/transactions/models/transaction_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -91,11 +92,11 @@ class TransactionsPieChartState extends State<TransactionsPieChart> {
 
   Color getColor(String description) {
     switch (description) {
-      case 'Pagamento de aluguel':
+      case AppTexts.rentText:
         return const Color(0xff0293ee);
-      case 'Compra no supermercado':
+      case AppTexts.supermarketText:
         return const Color(0xfff8b250);
-      case 'Compra de eletrônicos':
+      case AppTexts.electronicsText:
         return const Color(0xff845bef);
       default:
         return const Color(0xff13d38e);

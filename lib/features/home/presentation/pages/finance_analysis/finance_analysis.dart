@@ -1,5 +1,5 @@
-import 'package:finance_project_sophia_flutter/home/presentation/utils/dynamic_card.dart';
-import 'package:finance_project_sophia_flutter/home/presentation/utils/texts.dart';
+import 'package:finance_project_sophia_flutter/features/home/presentation/utils/dynamic_card.dart';
+import 'package:finance_project_sophia_flutter/features/home/presentation/utils/texts.dart';
 import 'package:finance_project_sophia_flutter/transactions/models/transaction_model.dart';
 import 'package:finance_project_sophia_flutter/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +17,10 @@ class FinancialAnalysisCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double totalIncome = transactions
-        .where((transaction) => transaction.type == 'income')
+        .where((transaction) => transaction.type == AppTexts.income)
         .fold(0.0, (sum, transaction) => sum + transaction.amount);
     double totalExpense = transactions
-        .where((transaction) => transaction.type == 'expense')
+        .where((transaction) => transaction.type == AppTexts.expense)
         .fold(0.0, (sum, transaction) => sum + transaction.amount);
     double balance = totalIncome - totalExpense;
 

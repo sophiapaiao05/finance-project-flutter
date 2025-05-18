@@ -1,5 +1,5 @@
-import 'package:finance_project_sophia_flutter/home/presentation/utils/dynamic_card.dart';
-import 'package:finance_project_sophia_flutter/home/presentation/utils/texts.dart';
+import 'package:finance_project_sophia_flutter/features/home/presentation/utils/dynamic_card.dart';
+import 'package:finance_project_sophia_flutter/features/home/presentation/utils/texts.dart';
 import 'package:finance_project_sophia_flutter/utils/app_sizes.dart';
 import 'package:finance_project_sophia_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';

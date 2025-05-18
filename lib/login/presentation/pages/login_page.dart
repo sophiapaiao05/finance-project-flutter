@@ -1,8 +1,8 @@
-import 'package:finance_project_sophia_flutter/home/presentation/pages/home_page.dart';
-import 'package:finance_project_sophia_flutter/login/presentation/controllers/login_auth_provider.dart';
-import 'package:finance_project_sophia_flutter/utils/colors.dart';
+import 'package:finance_project_sophia_flutter/login/presentation/pages/login_controller.dart';
+import 'package:finance_project_sophia_flutter/login/presentation/utils/login_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:finance_project_sophia_flutter/utils/colors.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,52 +16,23 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<void> _login(BuildContext context) async {
-    await Provider.of<LoginAuthProvider>(context, listen: false).login(
-      _emailController.text,
-      _passwordController.text,
-    );
-
-    if (context.mounted &&
-        Provider.of<LoginAuthProvider>(context, listen: false).successLogin) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    }
-  }
-
-  Future<void> _register(BuildContext context) async {
-    await Provider.of<LoginAuthProvider>(context, listen: false).register(
-      _emailController.text,
-      _passwordController.text,
-    );
-
-    if (context.mounted &&
-        Provider.of<LoginAuthProvider>(context, listen: false).successLogin) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<LoginAuthProvider>(context);
+    final loginController = Provider.of<LoginController>(context);
 
     return Scaffold(
       body: PageView(
         controller: _pageController,
         children: [
-          _buildLoginPage(context, authProvider),
-          _buildRegisterPage(context, authProvider),
+          _buildLoginPage(context, loginController),
+          _buildRegisterPage(context, loginController),
         ],
       ),
     );
   }
 
-  Widget _buildLoginPage(BuildContext context, LoginAuthProvider authProvider) {
+  Widget _buildLoginPage(
+      BuildContext context, LoginController loginController) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -69,21 +40,29 @@ class LoginPageState extends State<LoginPage> {
         children: [
           TextFieldLogin(
             controller: _emailController,
-            errorMessage: authProvider.errorMessage,
+            errorMessage: loginController.errorMessage,
             hintText: 'Email',
           ),
           const SizedBox(height: 20),
           TextFieldLogin(
             controller: _passwordController,
-            errorMessage: authProvider.errorMessage,
+            errorMessage: loginController.errorMessage,
             hintText: 'Senha',
             obscureText: true,
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () => _login(context),
-            child: const Text('Login',
-                style: TextStyle(color: FinanceProjectColors.orange)),
+            onPressed: () => loginController.login(
+              context,
+              _emailController.text,
+              _passwordController.text,
+            ),
+            child: loginController.isLoading
+                ? const CircularProgressIndicator()
+                : const Text(
+                    LoginTexts.loginButton,
+                    style: TextStyle(color: FinanceProjectColors.orange),
+                  ),
           ),
           TextButton(
             onPressed: () => _pageController.animateToPage(
@@ -92,7 +71,7 @@ class LoginPageState extends State<LoginPage> {
               curve: Curves.easeInOut,
             ),
             child: const Text(
-              'Não tem uma conta? Registre-se',
+              LoginTexts.registerTitle,
               style: TextStyle(color: FinanceProjectColors.orange),
             ),
           ),
@@ -102,7 +81,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildRegisterPage(
-      BuildContext context, LoginAuthProvider authProvider) {
+      BuildContext context, LoginController loginController) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -110,21 +89,29 @@ class LoginPageState extends State<LoginPage> {
         children: [
           TextFieldLogin(
             controller: _emailController,
-            errorMessage: authProvider.errorMessage,
-            hintText: 'Email',
+            errorMessage: loginController.errorMessage,
+            hintText: LoginTexts.emailHint,
           ),
           const SizedBox(height: 20),
           TextFieldLogin(
             controller: _passwordController,
-            errorMessage: authProvider.errorMessage,
-            hintText: 'Senha',
+            errorMessage: loginController.errorMessage,
+            hintText: LoginTexts.passwordHint,
             obscureText: true,
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () => _register(context),
-            child: const Text('Registrar',
-                style: TextStyle(color: FinanceProjectColors.orange)),
+            onPressed: () => loginController.register(
+              context,
+              _emailController.text,
+              _passwordController.text,
+            ),
+            child: loginController.isLoading
+                ? const CircularProgressIndicator()
+                : const Text(
+                    LoginTexts.registerButton,
+                    style: TextStyle(color: FinanceProjectColors.orange),
+                  ),
           ),
           TextButton(
             onPressed: () => _pageController.animateToPage(
@@ -132,8 +119,10 @@ class LoginPageState extends State<LoginPage> {
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
             ),
-            child: const Text('Já tem uma conta? Faça login',
-                style: TextStyle(color: FinanceProjectColors.orange)),
+            child: const Text(
+              LoginTexts.loginTitle,
+              style: TextStyle(color: FinanceProjectColors.orange),
+            ),
           ),
         ],
       ),

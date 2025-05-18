@@ -26,4 +26,14 @@ class AppTexts {
       'Envie uma foto do seu recibo para registrar uma transação';
 
   static String noImageSelected = 'Nenhuma imagem selecionada.';
+
+  static const String rentText = 'Pagamento de aluguel';
+
+  static const String supermarketText = 'Compra no supermercado';
+
+  static const String electronicsText = 'Compra de eletrônicos';
+
+  static const String income = 'income';
+
+  static const String expense = 'expense';
 }
