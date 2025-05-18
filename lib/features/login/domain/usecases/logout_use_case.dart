@@ -1,4 +1,4 @@
-import 'package:finance_project_sophia_flutter/login/data/login_repository.dart';
+import 'package:finance_project_sophia_flutter/features/login/data/repositories/login_repository.dart';
 
 class LogoutUseCase {
   final AuthRepository repository;

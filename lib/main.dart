@@ -1,10 +1,10 @@
 import 'package:finance_project_sophia_flutter/features/home/presentation/pages/home_page.dart';
 import 'package:finance_project_sophia_flutter/features/transactions/presentation/controllers/transaction_controller.dart';
-import 'package:finance_project_sophia_flutter/login/presentation/controllers/login_auth_provider.dart';
-import 'package:finance_project_sophia_flutter/login/presentation/pages/login_controller.dart';
-import 'package:finance_project_sophia_flutter/login/presentation/pages/login_page.dart';
-import 'package:finance_project_sophia_flutter/transactions/data/transactions_repository.dart';
-import 'package:finance_project_sophia_flutter/transactions/presentation/utils/mocks.dart';
+import 'package:finance_project_sophia_flutter/features/login/presentation/controllers/login_auth_provider.dart';
+import 'package:finance_project_sophia_flutter/features/login/presentation/controllers/login_controller.dart';
+import 'package:finance_project_sophia_flutter/features/login/presentation/pages/login_page.dart';
+import 'package:finance_project_sophia_flutter/features/transactions/data/repositories/transactions_repository.dart';
+import 'package:finance_project_sophia_flutter/features/transactions/utils/mocks.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';

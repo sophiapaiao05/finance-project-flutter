@@ -1,5 +1,5 @@
-import 'package:finance_project_sophia_flutter/login/presentation/pages/login_controller.dart';
-import 'package:finance_project_sophia_flutter/login/presentation/utils/login_texts.dart';
+import 'package:finance_project_sophia_flutter/features/login/presentation/controllers/login_controller.dart';
+import 'package:finance_project_sophia_flutter/features/login/utils/login_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:finance_project_sophia_flutter/utils/colors.dart';

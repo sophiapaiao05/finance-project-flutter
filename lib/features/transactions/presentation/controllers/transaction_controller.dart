@@ -1,8 +1,8 @@
-import 'package:finance_project_sophia_flutter/transactions/presentation/controllers/transaction_service.dart';
+import 'package:finance_project_sophia_flutter/features/transactions/presentation/controllers/transaction_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:finance_project_sophia_flutter/transactions/models/transaction_model.dart';
+import 'package:finance_project_sophia_flutter/features/transactions/data/models/transaction_model.dart';
 import 'package:flutter/scheduler.dart';
 
 class TransactionProvider with ChangeNotifier {

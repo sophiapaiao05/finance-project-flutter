@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finance_project_sophia_flutter/transactions/models/transaction_model.dart';
+import 'package:finance_project_sophia_flutter/features/transactions/data/models/transaction_model.dart';
 
 class TransactionService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

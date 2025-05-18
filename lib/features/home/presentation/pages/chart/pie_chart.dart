@@ -1,6 +1,6 @@
-import 'package:finance_project_sophia_flutter/features/home/presentation/pages/chart/widgets/indicator.dart';
+import 'package:finance_project_sophia_flutter/features/home/presentation/pages/chart/indicator.dart';
 import 'package:finance_project_sophia_flutter/features/home/presentation/utils/texts.dart';
-import 'package:finance_project_sophia_flutter/transactions/models/transaction_model.dart';
+import 'package:finance_project_sophia_flutter/features/transactions/data/models/transaction_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 

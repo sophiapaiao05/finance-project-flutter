@@ -1,88 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:finance_project_sophia_flutter/features/home/presentation/pages/home_page.dart';
 
-class LoginAuthProvider with ChangeNotifier {
+class LoginController with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  LoginAuthProvider();
-
   String? _errorMessage;
-  UserCredential? _userCredential;
-  User? _currentUser;
+  bool _isLoading = false;
 
   String? get errorMessage => _errorMessage;
-  bool get successLogin => _userCredential != null;
-  User? get currentUser => _currentUser;
+  bool get isLoading => _isLoading;
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(
+      BuildContext context, String email, String password) async {
+    _isLoading = true;
+    notifyListeners();
+
     try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
       _errorMessage = null;
-      final userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
 
-      _userCredential = userCredential;
-      _currentUser = userCredential.user;
-      notifyListeners();
+      // Navegação para a página inicial
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      }
     } on FirebaseAuthException catch (e) {
-      _errorMessage = getLoginErrorMessage(e.code);
+      _errorMessage = _getErrorMessage(e.code);
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> register(String email, String password) async {
-    try {
-      _errorMessage = null;
-      final userCredential = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+  Future<void> register(
+      BuildContext context, String email, String password) async {
+    _isLoading = true;
+    notifyListeners();
 
-      _userCredential = userCredential;
-      _currentUser = userCredential.user;
-      notifyListeners();
+    try {
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      _errorMessage = null;
+
+      // Navegação para a página inicial
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      }
     } on FirebaseAuthException catch (e) {
-      _errorMessage = getRegisterErrorMessage(e.code);
+      _errorMessage = _getErrorMessage(e.code);
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> logout() async {
-    await _auth.signOut();
-    _userCredential = null;
-    _currentUser = null;
-    notifyListeners();
-  }
-
-  void clearError() {
-    _errorMessage = null;
-    notifyListeners();
-  }
-}
-
-String getLoginErrorMessage(String errorCode) {
-  switch (errorCode) {
-    case 'invalid-email':
-      return 'O endereço de email está mal formatado.';
-    case 'user-disabled':
-      return 'Este usuário foi desativado.';
-    case 'user-not-found':
-      return 'Nenhum usuário encontrado com este email.';
-    case 'wrong-password':
-      return 'A senha está incorreta.';
-    default:
-      return 'Ocorreu um erro desconhecido. Por favor, tente novamente.';
-  }
-}
-
-String getRegisterErrorMessage(String errorCode) {
-  switch (errorCode) {
-    case 'email-already-in-use':
-      return 'O endereço de email já está em uso por outra conta.';
-    case 'invalid-email':
-      return 'O endereço de email está mal formatado.';
-    case 'operation-not-allowed':
-      return 'O cadastro de usuários com email e senha está desativado.';
-    case 'weak-password':
-      return 'A senha fornecida é muito fraca.';
-    default:
-      return 'Ocorreu um erro desconhecido. Por favor, tente novamente.';
+  String _getErrorMessage(String errorCode) {
+    switch (errorCode) {
+      case 'invalid-email':
+        return 'O endereço de email está mal formatado.';
+      case 'user-disabled':
+        return 'Este usuário foi desativado.';
+      case 'user-not-found':
+        return 'Nenhum usuário encontrado com este email.';
+      case 'wrong-password':
+        return 'A senha está incorreta.';
+      case 'email-already-in-use':
+        return 'O endereço de email já está em uso por outra conta.';
+      case 'weak-password':
+        return 'A senha fornecida é muito fraca.';
+      default:
+        return 'Ocorreu um erro desconhecido. Por favor, tente novamente.';
+    }
   }
 }
