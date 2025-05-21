@@ -17,15 +17,16 @@ class TransactionModel {
     required this.description,
   });
 
+  // Factory para criar uma instância a partir de um documento do Firestore
   factory TransactionModel.fromFirestore(Map<String, dynamic> data) {
     return TransactionModel(
-      id: data['userId'],
-      category: data['category'],
-      description: data['description'],
-      amount: data['amount'],
+      id: data['userId'] ?? '',
+      category: data['category'] ?? '',
+      description: data['description'] ?? '',
+      amount: (data['amount'] as num).toDouble(),
       date: DateTime.parse(data['date']),
-      type: data['type'],
-      paymentMethod: data['paymentMethod'],
+      type: data['type'] ?? '',
+      paymentMethod: data['paymentMethod'] ?? '',
     );
   }
 
@@ -39,5 +40,16 @@ class TransactionModel {
       'type': type,
       'paymentMethod': paymentMethod,
     };
+  }
+
+  static List<TransactionModel> fromJsonList(List<dynamic> jsonList) {
+    return jsonList
+        .map((json) => TransactionModel.fromFirestore(json))
+        .toList();
+  }
+
+  static List<Map<String, dynamic>> toJsonList(
+      List<TransactionModel> transactions) {
+    return transactions.map((transaction) => transaction.toMap()).toList();
   }
 }

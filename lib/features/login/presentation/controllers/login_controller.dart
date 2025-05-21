@@ -1,62 +1,72 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:finance_project_sophia_flutter/features/home/presentation/pages/home_page.dart';
 
-class LoginController with ChangeNotifier {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class LoginController extends ChangeNotifier {
+  final FirebaseAuth _auth;
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  String? _errorMessage;
-  bool _isLoading = false;
+  final BehaviorSubject<bool> _isLoading = BehaviorSubject<bool>.seeded(false);
+  final BehaviorSubject<String?> _errorMessage =
+      BehaviorSubject<String?>.seeded(null);
 
-  String? get errorMessage => _errorMessage;
-  bool get isLoading => _isLoading;
+  Stream<bool> get isLoadingStream => _isLoading.stream;
+  Stream<String?> get errorMessageStream => _errorMessage.stream;
+
+  LoginController(this._auth);
 
   Future<void> login(
       BuildContext context, String email, String password) async {
-    _isLoading = true;
-    notifyListeners();
+    _isLoading.add(true);
+    _errorMessage.add(null);
 
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      _errorMessage = null;
+      final userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-      // Navegação para a página inicial
-      if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-      }
+      // Armazenar credenciais no cache
+      await _storage.write(key: 'user', value: userCredential.user!.toString());
+
+      // Navegar para a próxima página
+      Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
-      _errorMessage = _getErrorMessage(e.code);
+      _errorMessage.add(_getErrorMessage(e.code));
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      _isLoading.add(false);
     }
   }
 
   Future<void> register(
       BuildContext context, String email, String password) async {
-    _isLoading = true;
-    notifyListeners();
+    _isLoading.add(true);
+    _errorMessage.add(null);
 
     try {
       await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      _errorMessage = null;
+        email: email,
+        password: password,
+      );
 
-      // Navegação para a página inicial
-      if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-      }
+      await _storage.write(key: 'email', value: email);
+      await _storage.write(key: 'password', value: password);
+
+      Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
-      _errorMessage = _getErrorMessage(e.code);
+      _errorMessage.add(_getErrorMessage(e.code));
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      _isLoading.add(false);
+    }
+  }
+
+  Future<void> autoLogin(BuildContext context) async {
+    final email = await _storage.read(key: 'email');
+    final password = await _storage.read(key: 'password');
+
+    if (email != null && password != null) {
+      await login(context, email, password);
     }
   }
 
@@ -77,5 +87,12 @@ class LoginController with ChangeNotifier {
       default:
         return 'Ocorreu um erro desconhecido. Por favor, tente novamente.';
     }
+  }
+
+  @override
+  void dispose() {
+    _isLoading.close();
+    _errorMessage.close();
+    super.dispose();
   }
 }

@@ -17,6 +17,13 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Tentar login automático
+    Provider.of<LoginController>(context, listen: false).autoLogin(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final loginController = Provider.of<LoginController>(context);
 
@@ -38,31 +45,43 @@ class LoginPageState extends State<LoginPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextFieldLogin(
-            controller: _emailController,
-            errorMessage: loginController.errorMessage,
-            hintText: 'Email',
+          StreamBuilder<String?>(
+            stream: loginController.errorMessageStream,
+            builder: (context, snapshot) {
+              return TextFieldLogin(
+                controller: _emailController,
+                errorMessage: snapshot.data,
+                hintText: LoginTexts.emailHint,
+              );
+            },
           ),
           const SizedBox(height: 20),
           TextFieldLogin(
             controller: _passwordController,
-            errorMessage: loginController.errorMessage,
-            hintText: 'Senha',
+            hintText: LoginTexts.passwordHint,
             obscureText: true,
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => loginController.login(
-              context,
-              _emailController.text,
-              _passwordController.text,
-            ),
-            child: loginController.isLoading
-                ? const CircularProgressIndicator()
-                : const Text(
-                    LoginTexts.loginButton,
-                    style: TextStyle(color: FinanceProjectColors.orange),
-                  ),
+          StreamBuilder<bool>(
+            stream: loginController.isLoadingStream,
+            builder: (context, snapshot) {
+              final isLoading = snapshot.data ?? false;
+              return ElevatedButton(
+                onPressed: isLoading
+                    ? null
+                    : () => loginController.login(
+                          context,
+                          _emailController.text,
+                          _passwordController.text,
+                        ),
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                        LoginTexts.loginButton,
+                        style: TextStyle(color: FinanceProjectColors.orange),
+                      ),
+              );
+            },
           ),
           TextButton(
             onPressed: () => _pageController.animateToPage(
@@ -89,29 +108,35 @@ class LoginPageState extends State<LoginPage> {
         children: [
           TextFieldLogin(
             controller: _emailController,
-            errorMessage: loginController.errorMessage,
             hintText: LoginTexts.emailHint,
           ),
           const SizedBox(height: 20),
           TextFieldLogin(
             controller: _passwordController,
-            errorMessage: loginController.errorMessage,
             hintText: LoginTexts.passwordHint,
             obscureText: true,
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => loginController.register(
-              context,
-              _emailController.text,
-              _passwordController.text,
-            ),
-            child: loginController.isLoading
-                ? const CircularProgressIndicator()
-                : const Text(
-                    LoginTexts.registerButton,
-                    style: TextStyle(color: FinanceProjectColors.orange),
-                  ),
+          StreamBuilder<bool>(
+            stream: loginController.isLoadingStream,
+            builder: (context, snapshot) {
+              final isLoading = snapshot.data ?? false;
+              return ElevatedButton(
+                onPressed: isLoading
+                    ? null
+                    : () => loginController.register(
+                          context,
+                          _emailController.text,
+                          _passwordController.text,
+                        ),
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                        LoginTexts.registerButton,
+                        style: TextStyle(color: FinanceProjectColors.orange),
+                      ),
+              );
+            },
           ),
           TextButton(
             onPressed: () => _pageController.animateToPage(

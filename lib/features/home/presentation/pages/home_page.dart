@@ -6,7 +6,6 @@ import 'package:finance_project_sophia_flutter/features/home/presentation/utils/
 import 'package:finance_project_sophia_flutter/features/home/presentation/utils/texts.dart';
 import 'package:finance_project_sophia_flutter/features/login/presentation/controllers/login_auth_provider.dart';
 import 'package:finance_project_sophia_flutter/features/login/presentation/pages/login_page.dart';
-import 'package:finance_project_sophia_flutter/features/transactions/data/models/transaction_model.dart';
 import 'package:finance_project_sophia_flutter/features/transactions/presentation/pages/transactions_page.dart';
 import 'package:finance_project_sophia_flutter/utils/app_sizes.dart';
 import 'package:finance_project_sophia_flutter/utils/colors.dart';
@@ -26,24 +25,22 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<TransactionProvider>(context, listen: false)
-        .fetchTransactions();
-  }
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+
+    if (index == 2) {
+      Provider.of<TransactionProvider>(context, listen: false)
+          .fetchTransactions();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(60.0),
         child: Container(
           decoration: const BoxDecoration(
             color: FinanceProjectColors.deepBlue,
@@ -62,28 +59,26 @@ class HomePageState extends State<HomePage> {
         ),
       ),
       backgroundColor: FinanceProjectColors.background,
-      body: Consumer<TransactionProvider>(
-        builder: (context, transactionProvider, child) {
-          if (transactionProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            return _buildPageContent(
-                _selectedIndex, transactionProvider.transactions);
-          }
-        },
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          _buildPageContent(0),
+          const InitialPage(),
+          TransactionsPage(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.pie_chart),
+            icon: const Icon(Icons.pie_chart),
             label: AppTexts.chart,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: const Icon(Icons.home),
             label: AppTexts.home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.monetization_on),
+            icon: const Icon(Icons.monetization_on),
             label: AppTexts.transactions,
           ),
         ],
@@ -94,40 +89,51 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildPageContent(int index, List<TransactionModel> transactions) {
+  Widget _buildPageContent(int index) {
     switch (index) {
       case 0:
-        return SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () async {
-                  await Provider.of<LoginAuthProvider>(context, listen: false)
-                      .logout();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
-                },
-              ),
-              DynamicCard(
-                margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).size.height * 0.1,
-                  top: MediaQuery.of(context).size.height * 0.1,
-                  left: AppSizes.marginLarge,
-                  right: AppSizes.marginLarge,
+        return Consumer<TransactionProvider>(
+          builder: (context, transactionProvider, child) {
+            if (transactionProvider.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    IconButton(
+                      icon: const Icon(Icons.logout),
+                      onPressed: () async {
+                        await Provider.of<LoginAuthProvider>(context,
+                                listen: false)
+                            .logout();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()),
+                        );
+                      },
+                    ),
+                    DynamicCard(
+                      margin: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height * 0.1,
+                        top: MediaQuery.of(context).size.height * 0.1,
+                        left: AppSizes.marginLarge,
+                        right: AppSizes.marginLarge,
+                      ),
+                      child: TransactionsPieChart(
+                        transactions: transactionProvider.transactions,
+                      ),
+                    ),
+                    FinancialAnalysisCard(
+                        transactions: transactionProvider.transactions),
+                  ],
                 ),
-                child: TransactionsPieChart(
-                  transactions: transactions,
-                ),
-              ),
-              FinancialAnalysisCard(transactions: transactions),
-            ],
-          ),
+              );
+            }
+          },
         );
       case 1:
-        return InitialPage();
+        return const InitialPage();
       case 2:
         return TransactionsPage();
       default:

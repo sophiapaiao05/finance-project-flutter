@@ -31,10 +31,12 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
         ChangeNotifierProvider(create: (_) => LoginAuthProvider()),
-        ChangeNotifierProvider(create: (_) => LoginController()),
+        ChangeNotifierProvider(
+            create: (_) => LoginController(FirebaseAuth.instance)),
       ],
-      child: const MaterialApp(
-        home: Home(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const Home(),
       ),
     );
   }
